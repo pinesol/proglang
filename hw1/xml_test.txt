@@ -1,0 +1,5 @@
+<test1>data1</test1>
+<test2></test2>
+<test3><testsub3></testsub3></test3>
+<test4>qwer <testsub4></testsub4> asdf</test4>
+<test5><testsub5>qwer</testsub5> asdf</test5>

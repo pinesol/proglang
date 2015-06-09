@@ -18,34 +18,34 @@ void yyerror(const char *s);
   char* sval;
 }
 
-%start xml_root
+%start root
 
-%token <sval> OPEN
-%token <sval> CLOSE
+%token <sval> START_CLOSING_TAG
+%token <sval> START_OPENING_TAG
+%token <sval> END_TAG
 %token <sval> DATA
 
 %%
-xml_root : OPEN xml_body CLOSE { 
-  if (strcmp(&($1[1]), &($3[2])) == 0) { 
-    std::cout << "Tags " << $1 << " and " << $3 << " match." << std::endl; 
-  } else {
-    std::cout << "Syntax error: " << $1 << " != " << $3 << std::endl; 
-    exit(1);
-  }
- }
-      ;
+root : block
+     ;
 
-xml_body : OPEN xml_body CLOSE { 
-  if (strcmp(&($1[1]), &($3[2])) == 0) { 
-    std::cout << "Tags " << $1 << " and " << $3 << " match." << std::endl; 
+expr_list : block expr_list
+          | DATA expr_list
+          | /* Empty string is accepted */
+          ;
+
+attr : DATA | ;
+
+block : START_OPENING_TAG attr END_TAG expr_list START_CLOSING_TAG END_TAG  { 
+  if (strcmp(&($1[1]), &($5[2])) == 0) { 
+    std::cout << "Tags " << $1 << " and " << $5 << " match." << std::endl; 
   } else {
-    std::cout << "Syntax error: " << $1 << " != " << $3 << std::endl; 
+    std::cout << "Syntax error: " << $1 << " != " << $5 << std::endl; 
     exit(1);
   }
  }
-         | DATA { std::cout << "Data: " << $1 << std::endl; }
-         | /* empty string is accepted */
-         ;
+
+     ;
 %%
 
 int main()
