@@ -14,7 +14,8 @@ Programming Languages, Summer 2015
 
 "</"[0-9a-zA-Z/.=:"]+[ \t\r\n0-9a-zA-Z/.=:"]*">" { std::cout << "closing tag: " << yytext << std::endl; }
 "<"[0-9a-zA-Z/.=:"]+[ \t\r\n0-9a-zA-Z/.=:"]*">"  { std::cout << "opening tag: " << yytext << std::endl; }
-[ \t\r\n]+                                       { /* Ignore white characters. */ }
+[ \t\r\n]+                                       { /* Ignore blank space. */ }
+[0-9a-zA-Z/.=:" \t\r\n]+                         { std::cout << "data: " << yytext << std::endl; }
 .                                                { std::cerr << "Invalid token" << std::endl; exit(1); }
 
 %%
