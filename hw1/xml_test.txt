@@ -3,3 +3,4 @@
 <test3><testsub3></testsub3></test3>
 <test4>qwer <testsub4></testsub4> asdf</test4>
 <test5><testsub5>qwer</testsub5> asdf</test5>
+<test6><testsub6>qwer</testsub6> asdf <testsub61>qwer</testsub61></test6>
