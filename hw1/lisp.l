@@ -1,3 +1,8 @@
+/* lisp.l
+Lisp Lexer
+Alex Pine
+Programming Languages, Summer 2015
+*/
 %{
 #include <iostream>
 #include <stdlib.h>
@@ -8,8 +13,6 @@
 
 %%
 
-                        /* 'val' in 'yylval.val' is the field declared in
-                           calc2.y with the %union directive. */
 [0-9]+                  { yylval.val = atoi(yytext); return NUM; }
 "+"                     { return PLUS; }
 "-"                     { return MINUS; }
