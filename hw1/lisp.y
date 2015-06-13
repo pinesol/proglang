@@ -20,7 +20,7 @@ int yyerror(const char* p) { std::cerr << "error: " << p << std::endl; return 0;
 %token PLUS MINUS MUL DIV
 %token <val> NUM
 
-%type <val> list expr plus_func mul_func minus_func div_func
+%type <val> list expr plus_func mul_func arg
 
 /* Order of directives will determine the precedence. */
 %left PLUS MINUS    /* left means left-associativity. */
@@ -35,30 +35,20 @@ list : LPAREN expr RPAREN               { $$ = $2; }
 
 expr : PLUS plus_func                   { $$ = $2; }
      | MUL mul_func                     { $$ = $2; }
-     | MINUS minus_func                 { $$ = $2; }
-     | DIV div_func                     { $$ = $2; }
+     | MINUS arg arg                    { $$ = $2 - $3; }
+     | DIV arg arg                      { $$ = $2 / $3; }
      ;
 
-plus_func : plus_func NUM               { $$ = $1 + $2; }
-          | plus_func list              { $$ = $1 + $2; }
-          | NUM | list                  /* default action: { $$ = $1; } */
+arg : NUM
+    | list
+    ;
+
+plus_func : plus_func arg               { $$ = $1 + $2; }
+          | arg
           ;
 
-mul_func : mul_func NUM                 { $$ = $1 * $2; }
-         | mul_func list                { $$ = $1 * $2; }
-         | NUM | list                   /* default action: { $$ = $1; } */
-         ;
-
-minus_func : NUM NUM                    { $$ = $1 - $2; }
-           | list NUM                   { $$ = $1 - $2; }
-           | NUM list                   { $$ = $1 - $2; }
-           | list list                  { $$ = $1 - $2; }
-           ;
-
-div_func : NUM NUM                      { $$ = $1 / $2; }
-         | list NUM                     { $$ = $1 / $2; }
-         | NUM list                     { $$ = $1 / $2; }
-         | list list                    { $$ = $1 / $2; }
+mul_func : mul_func arg                 { $$ = $1 * $2; }
+         | arg
          ;
 
 %%
