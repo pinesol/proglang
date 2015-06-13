@@ -49,17 +49,13 @@ mul_func : mul_func NUM                 { $$ = $1 * $2; }
          | NUM | list                   /* default action: { $$ = $1; } */
          ;
 
-minus_func : minus_func NUM             { $$ = $1 - $2; }
-           | minus_func list            { $$ = $1 - $2; }
-           | NUM NUM                    { $$ = $1 - $2; }
+minus_func : NUM NUM                    { $$ = $1 - $2; }
            | list NUM                   { $$ = $1 - $2; }
            | NUM list                   { $$ = $1 - $2; }
            | list list                  { $$ = $1 - $2; }
            ;
 
-div_func : div_func NUM                 { $$ = $1 / $2; }
-         | div_func list                { $$ = $1 / $2; }
-         | NUM NUM                      { $$ = $1 / $2; }
+div_func : NUM NUM                      { $$ = $1 / $2; }
          | list NUM                     { $$ = $1 / $2; }
          | NUM list                     { $$ = $1 / $2; }
          | list list                    { $$ = $1 / $2; }
