@@ -1,29 +1,26 @@
+/* lisp.y
+Lisp Parser
+Alex Pine
+Programming Languages, Summer 2015
+*/
 %{
 #include <iostream>
 
-int yylex(); // A function that is to be generated and provided by flex,
-             // which returns a next token when called repeatedly.
-int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; return 0;};
+int yylex();
+int yyerror(const char* p) { std::cerr << "error: " << p << std::endl; return 0; };
 %}
 
 %union {
     int val;
-    /* You may include additional fields as you want. */
-    /* char op; */
 };
 
 %start prog
 
 %token LPAREN RPAREN
 %token PLUS MINUS MUL DIV
-%token <val> NUM    /* 'val' is the (only) field declared in %union
-                       which represents the type of the token. */
+%token <val> NUM
 
-%type <val> list expr plus_func
-
- /* TODO doesn't work! */
-
-/* Resolve the ambiguity of the grammar by defining precedence. */
+%type <val> list expr plus_func mul_func minus_func div_func
 
 /* Order of directives will determine the precedence. */
 %left PLUS MINUS    /* left means left-associativity. */
@@ -36,19 +33,37 @@ prog : list                             { std::cout << $1 << std::endl; }
 
 list : LPAREN expr RPAREN               { $$ = $2; }
 
-expr : PLUS plus_func                { $$ = $2; }
-       /*
-     | MINUS args { $$ = $$ - $2; }
-     | MUL args { $$ = $$ * $2; }
-     | DIV args { $$ = $$ / $2; }
-       */
+expr : PLUS plus_func                   { $$ = $2; }
+     | MUL mul_func                     { $$ = $2; }
+     | MINUS minus_func                 { $$ = $2; }
+     | DIV div_func                     { $$ = $2; }
      ;
 
-plus_func : list plus_func  { $$ = $$ + $1; }
-          | NUM plus_func  { $$ = $$ + $1; }
-          | NUM | list /* default action: { $$ = $1; } */
+plus_func : plus_func NUM               { $$ = $1 + $2; }
+          | plus_func list              { $$ = $1 + $2; }
+          | NUM | list                  /* default action: { $$ = $1; } */
           ;
 
+mul_func : mul_func NUM                 { $$ = $1 * $2; }
+         | mul_func list                { $$ = $1 * $2; }
+         | NUM | list                   /* default action: { $$ = $1; } */
+         ;
+
+minus_func : minus_func NUM             { $$ = $1 - $2; }
+           | minus_func list            { $$ = $1 - $2; }
+           | NUM NUM                    { $$ = $1 - $2; }
+           | list NUM                   { $$ = $1 - $2; }
+           | NUM list                   { $$ = $1 - $2; }
+           | list list                  { $$ = $1 - $2; }
+           ;
+
+div_func : div_func NUM                 { $$ = $1 / $2; }
+         | div_func list                { $$ = $1 / $2; }
+         | NUM NUM                      { $$ = $1 / $2; }
+         | list NUM                     { $$ = $1 / $2; }
+         | NUM list                     { $$ = $1 / $2; }
+         | list list                    { $$ = $1 / $2; }
+         ;
 
 %%
 
