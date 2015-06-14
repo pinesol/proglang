@@ -1,7 +1,7 @@
 # Usage test.sh ${name}
 # Assumes ${name}.l, ${name}.y, ${name}_test.txt exists
 
-bison -d ${1}.y && flex ${1}.l && g++ lex.yy.c ${1}.tab.c -o ${1}_parser
+bison -d -v -t ${1}.y && flex ${1}.l && g++ lex.yy.c ${1}.tab.c -o ${1}_parser
 
 while read line; do
     echo $line | ./${1}_parser
