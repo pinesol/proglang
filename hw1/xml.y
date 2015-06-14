@@ -40,8 +40,8 @@ attr : DATA
 
 block : START_OPENING_TAG attr END_TAG expr_list START_CLOSING_TAG END_TAG  {
   /* $1 should be "<name", and $5 should be "</name". Therefore $1[1] and $5[2]
-   * should both be "name" */
-  if (strcmp(&($1[1]), &()) == 0) { 
+     should both be "name" */
+  if (strcmp(&($1[1]), &($5[2])) == 0) { 
     std::cout << "Tags " << $1 << " and " << $5 << " match." << std::endl; 
   } else {
     std::cout << "Syntax error: " << $1 << " != " << $5 << std::endl; 
